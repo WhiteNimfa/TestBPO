@@ -1,26 +1,13 @@
+<!doctype html>
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Тестовое задание</title>
-	
-	<script>
-		function validate_form ( )
-		{
-   			valid = true;
-   			    if ( document.contact_form.name.value == "" || document.contact_form.surname.value == "") {
-                alert ( "Пожалуйста заполните поле 'имя'." );
-                valid = false;
-            	}
-			return valid;
-		}
-		
-	</script>
+		<title>Тестовое задание Би Пи О</title>
 	</head>
 	
 	<body>
-		<h1>Форма для заполнения</h1>
-		<p>Проверка git</p>
-		<form name="contact_form" method="post" action="dumb.html" onsubmit="return validate_form();">
+		<h1>Регистрация пользователя</h1>
+		<form name="contact_form" method="post" action="" id="form">
 			<table>
 				<tr>
 					<td><label for="surname">Фамилия</label></td>
@@ -36,7 +23,7 @@
 				</tr>
 				<tr>
 					<td><label for="dob">Дата рождения</label></td>
-					<td><input type="text" name="dob" id="dob"></td>
+					<td><input type="date" name="dob" id="dob"></td> 
 				</tr>
 				<tr>
 					<td><label for="passport">Номер паспорта</label></td>
@@ -51,10 +38,86 @@
 					<td><input type="password" name="password" id="password"></td>
 				</tr>
 				<tr>
-					<td><input type="submit" value="Отправить"></td>
+					<td><input type="button" onclick="valid(document.getElementById('form'))" value="Отправить"></td>
 				</tr>
 			</table>
 		</form>
+		<script>
+		function valid(form) {
+			
+			// сообщение об ошибке
+			var fail = false;
+			
+			// переменные всех полей
+			var surname = form.surname.value;
+			var name = form.name.value;
+			var patronymic = form.patronymic.value;
+			var dob = form.dob.value;
+			var passport = form.passport.value;
+			var login = form.login.value;
+			var password = form.password.value;
+			
+			// для проверки даты
+			var today = new Date();
+			var userdate = dob;
+			
+			//переменные для регулярки
+			var surnamePattern = /^[a-zA-Zа-яА-ЯёЁ]+$/; 
+			var namePattern = /^[a-zA-Zа-яА-ЯёЁ]+$/ ;
+			var patronymicPattern = /^[a-zA-Zа-яА-ЯёЁ]+$/ ;
+			var passportPattern = /\d{2}\s\d{2}\s\d{6}/g ;
+			var loginPattern = /[a-z]/g ;
+			var passwordPattern = /(?=.*[!"№;%:?*()_+/])(?=.*[a-zA-Zа-яА-Я])[a-zA-Zа-яА-Я!"№;%:?*()_+/]{10,}/g ; 
+						
+			// проверка полей
+
+			// фамилия
+			if(surname == "" || surname == " ")
+				fail = "Вы не заполнили поле Фамилия";
+			else if(surnamePattern.test(surname) == false)
+				fail = "Проверьте правильность ввода фамилии";
+			// имя
+			else if(name == "" || name == " ")
+				fail = "Вы не заполнили поле Имя";
+			else if(namePattern.test(name) == false)
+				fail = "Проверьте правильность ввода имени";
+			// // отчество
+			else if(patronymic == "" || patronymic == " ")
+				fail = "Вы не заполнили поле Отчество";
+			else if(patronymicPattern.test(patronymic) == false)
+				fail = "Проверьте правильность ввода отчества";
+			// дата рождения
+			else if((Date.parse(today) > Date.parse(userdate) == false))
+				fail = "Вы неверно ввели Дату рождения";
+			// паспорт
+			else if(passportPattern.test(passport) == false)
+				fail = "Номер паспорта заполняется по маске 00 00 000000";
+			// логин
+			else if(login == "" || login == " ")
+				fail = "Вы не заполнили поле Логин";
+			else if(loginPattern.test(login) == false)
+				fail = "Логин может содержать только маленькие латинские буквы!";
+			// пароль
+			else if(passwordPattern.test(password) == false)
+				fail = "Пароль должен быть не менее 10 символов и содержать буквы и спецсимволы";
+
+			if(fail)
+				alert(fail);
+
+			// создание localStorage
+			var user = {
+				surname: surname,
+				name:name,
+				patronymic:patronymic,	
+				dob:dob,
+				passport:passport,
+				login:login,
+				password:password			
+			}
+			localStorage.setItem('user', JSON.stringify(user));
+						
+		}
+	</script>
 	
 	</body>
 </html>
